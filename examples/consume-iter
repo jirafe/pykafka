@@ -6,4 +6,4 @@ consumer = kafka.consumer.Consumer('test')
 #messages = consumer.consume()
 
 for message in consumer.loop():
-  print message
+    print message
