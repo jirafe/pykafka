@@ -9,7 +9,7 @@ TCP. You can obtain a copy and instructions on how to setup kafka at
 https://github.com/kafka-dev/kafka
 
 ## Installation
-pip install pykafka
+pip install git+ssh://git@github.com/jirafe/pykafka.git
 
 ## Usage
 
