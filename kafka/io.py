@@ -57,27 +57,13 @@ class IO(object):
     """ Write `data` to the remote Kafka server. """
 
     if self.socket is None:
-      self.reconnect()
+      self.connect()
 
     wrote_length = 0
-
-    try:
-      wrote_length = self.__write(data)
-
-    except IOError, e:
-      # Retry once.
-      if e.errno in (errno.ECONNRESET, errno.EPIPE, errno.ECONNABORTED):
-        self.reconnect()
-        wrote_length = self.__write(data)
-
-    finally:
-      return wrote_length
-
-  def __write(self, data):
     write_length = len(data)
-    wrote_length = 0
 
     while write_length > wrote_length:
-      wrote_length += self.socket.send(data[wrote_length:])
+      remainder = data[wrote_length:]
+      wrote_length += self.socket.send(remainder)
 
     return wrote_length
