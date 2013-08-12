@@ -16,8 +16,15 @@ class Consumer(kafka.io.IO):
   def __init__(self, topic, partition=0, offset=0, host='localhost', port=9092):
     kafka.io.IO.__init__(self, host, port)
 
+    topic_str = str(topic) # This handles the case of using an object with a
+                           # __str__ method.
+    # The topic must be ascii, not unicode.
+    if type(topic_str) == unicode:
+        topic_str = unicodedata.normalize('NFKD', topic_str)
+        topic_str = topic_str.encode('ascii', 'ignore')
+
     #: The topic queue to consume.
-    self.topic        = topic
+    self.topic        = topic_str
 
     #: The partition the topic queue is on.
     self.partition    = partition
