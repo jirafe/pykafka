@@ -23,8 +23,15 @@ class Producer(kafka.io.IO):
 
   def __init__(self, topic, partition=0, host='localhost', port=9092, max_message_sz=1048576):
     kafka.io.IO.__init__(self, host, port)
-    self.max_message_sz = max_message_sz
-    self.topic = topic
+
+    topic_str = str(topic) # This handles the case of using an object with a
+                           # __str__ method.
+    # The topic must be ascii, not unicode.
+    if type(topic_str) == unicode:
+        topic_str = unicodedata.normalize('NFKD', topic_str)
+        topic_str = topic_str.encode('ascii', 'ignore')
+    self.topic = topic_str
+    max_message_sz = max_message_sz
     self.partition = partition
     self.connect()
 
