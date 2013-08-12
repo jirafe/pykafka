@@ -1,7 +1,7 @@
-""" Kafka Constants """
+"""Kafka Constants"""
 
-PRODUCE      = 0
-FETCH        = 1
-MULTIFETCH   = 2
+PRODUCE = 0
+FETCH = 1
+MULTIFETCH = 2
 MULTIPRODUCE = 3
-OFFSETS      = 4
+OFFSETS = 4
