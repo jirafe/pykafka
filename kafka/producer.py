@@ -30,7 +30,7 @@ class Producer(kafka.io.IO):
             topic_str = unicodedata.normalize('NFKD', topic_str)
             topic_str = topic_str.encode('ascii', 'ignore')
         self.topic = topic_str
-        max_message_sz = max_message_sz
+        self.max_message_sz = max_message_sz
         self.partition = partition
         self.connect()
 
