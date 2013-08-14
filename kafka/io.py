@@ -88,6 +88,6 @@ class IO(object):
             raise ConnectionResetException()
         except socket.error, e:
             err = e.args[0]
-            if not err in (errno.EAGAIN, errno.EWOULDBOCK):
+            if not err in (errno.EAGAIN, errno.EWOULDBLOCK):
                 logging.exception("socket.error")
                 raise
