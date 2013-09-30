@@ -57,7 +57,7 @@ class IO(object):
         else:
             return str(buf)
 
-    def write(self, data):
+    def write(self, data, check_reset=False):
         """Write `data` to the remote Kafka server."""
 
         if self.socket is None:
@@ -69,7 +69,8 @@ class IO(object):
         while write_length > wrote_length:
             remainder = data[wrote_length:]
             wrote_length += self.socket.send(remainder)
-            self._check_reset()
+            if check_reset:
+                self._check_reset()
         return wrote_length
 
     def _check_reset(self):

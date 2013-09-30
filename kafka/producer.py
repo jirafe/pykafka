@@ -95,7 +95,7 @@ class Producer(kafka.io.IO):
         if isinstance(messages, kafka.message.Message):
             messages = [messages]
         for message in self.encode_request(messages):
-            sent = self.write(message)
+            sent = self.write(message, check_reset=True)
             if sent != len(message):
                 raise IOError(
                     'Failed to send kafka message - sent %s/%s many bytes.' % (sent, len(message)))
