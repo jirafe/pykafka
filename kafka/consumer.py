@@ -96,6 +96,8 @@ class Consumer(kafka.io.IO):
         while (processed <= length):
             message_size = struct.unpack(
                 '>i', data[processed:processed + 4])[0]
+            if processed + message_size + 4 > len(data):
+                break
             messages.append(kafka.message.parse_from(
                 data[processed:processed + message_size + 4]))
             processed += 4 + message_size
