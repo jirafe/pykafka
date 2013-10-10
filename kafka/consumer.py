@@ -49,7 +49,7 @@ class Consumer(kafka.io.IO):
 
     def loop(self):
         """Loop over incoming message queue in a blocking fashion.
-        
+
         Set `polling` for the check interval in seconds."""
 
         while True:
@@ -60,6 +60,18 @@ class Consumer(kafka.io.IO):
                     yield message
 
             time.sleep(self.polling)
+
+    def get_latest_offset(self):
+        self.write(self.encode_request_size())
+        self.write(self.encode_offset_request(-1, 1))
+
+        return self.parse_offset_response(self.read_data_response())[0]
+
+    def get_earliest_offset(self):
+        self.write(self.encode_request_size())
+        self.write(self.encode_offset_request(-2, 1))
+
+        return self.parse_offset_response(self.read_data_response())[0]
 
     # REQUEST TYPE ID + TOPIC LENGTH + TOPIC + PARTITION + OFFSET + MAX SIZE
     def request_size(self):
@@ -78,6 +90,16 @@ class Consumer(kafka.io.IO):
                            self.offset,
                            self.max_size)
 
+    def encode_offset_request(self, time, max_offsets):
+        length = len(self.topic)
+        return struct.pack('>HH%dsiqi' % length,
+                           kafka.request_type.OFFSETS,
+                           length,
+                           self.topic,
+                           self.partition,
+                           time,
+                           max_offsets)
+
     def send_consume_request(self):
         self.write(self.encode_request_size())
         self.write(self.encode_request())
@@ -87,6 +109,18 @@ class Consumer(kafka.io.IO):
 
         # Start with a 2 byte offset
         return self.read(buf_length)[2:]
+
+    def parse_offset_response(self, data):
+        offsets = []
+        count = struct.unpack('>i', data[0:4])[0]
+        processed = 4
+
+        while (count > 0):
+            offsets.append(struct.unpack('>Q', data[processed:processed + 8])[0])
+            count -= 1
+            processed += 8
+
+        return offsets
 
     def parse_message_set_from(self, data):
         messages = []

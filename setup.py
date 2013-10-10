@@ -74,12 +74,10 @@ setuptools.bootstrap_install_from = None
 
 setuptools.setup(
   name = 'pykafka',
-  version = '0.1.4',
+  version = '0.1.5',
   license = 'MIT',
   long_description = __doc__,
-  author = "Dan Sully",
-  author_email = "dsully@gmail.com",
-  url = 'http://github.com/dsully/pykafka',
+  url = 'http://github.com/jirafe/pykafka',
   platforms = 'any',
 
   # What are we packaging up?
