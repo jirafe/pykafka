@@ -74,7 +74,7 @@ setuptools.bootstrap_install_from = None
 
 setuptools.setup(
   name = 'pykafka',
-  version = '0.1.5',
+  version = '0.1.6',
   license = 'MIT',
   long_description = __doc__,
   url = 'http://github.com/jirafe/pykafka',

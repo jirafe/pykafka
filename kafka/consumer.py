@@ -61,17 +61,17 @@ class Consumer(kafka.io.IO):
 
             time.sleep(self.polling)
 
-    def get_latest_offset(self):
+    def get_offsets(self, timestamp, count = 1):
         self.write(self.encode_request_size())
-        self.write(self.encode_offset_request(-1, 1))
+        self.write(self.encode_offset_request(timestamp, count))
 
-        return self.parse_offset_response(self.read_data_response())[0]
+        return self.parse_offset_response(self.read_data_response())
+
+    def get_latest_offset(self):
+        return self.get_offsets(-1, 1)[0]
 
     def get_earliest_offset(self):
-        self.write(self.encode_request_size())
-        self.write(self.encode_offset_request(-2, 1))
-
-        return self.parse_offset_response(self.read_data_response())[0]
+        return self.get_offsets(-2, 1)[0]
 
     # REQUEST TYPE ID + TOPIC LENGTH + TOPIC + PARTITION + OFFSET + MAX SIZE
     def request_size(self):
